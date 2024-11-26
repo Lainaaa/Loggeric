@@ -15,12 +15,12 @@ public protocol LoggericProtocol {
 
 /// Log levels with `os_log` support
 public enum LogLevel: String {
-    /// Default log level
-    case `default` = "default"
     /// Debug log level
     case debug = "debug"
     /// Information log level
     case info = "info"
+    /// Warning log level
+    case warning = "warning"
     /// Error log level
     case error = "error"
     /// Critical error log level
@@ -28,9 +28,9 @@ public enum LogLevel: String {
     
     var osLogType: OSLogType {
         switch self {
-        case .default: return .default
         case .debug: return .debug
         case .info: return .info
+        case .warning: return .default
         case .error: return .error
         case .fault: return .fault
         }
@@ -38,9 +38,9 @@ public enum LogLevel: String {
     
     var heart: String {
         switch self {
-        case .default: return "💚"
-        case .debug: return "🖤"
-        case .info: return "💛"
+        case .debug: return "💚"
+        case .info: return "🖤"
+        case .warning: return "💛"
         case .error: return "❤️"
         case .fault: return "❤️‍🔥"
         }
@@ -68,11 +68,11 @@ public class Loggeric: LoggericProtocol {
     }
     
     // Debug log level
-    public func `default`(_ message: String,
+    public func warning(_ message: String,
                       file: String = #fileID,
                       function: String = #function,
                       line: Int = #line) {
-        log(level: .default, message: message, file: file, function: function, line: line)
+        log(level: .warning, message: message, file: file, function: function, line: line)
     }
     
     // Debug log level

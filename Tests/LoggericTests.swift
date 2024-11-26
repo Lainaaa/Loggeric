@@ -15,20 +15,6 @@ public class MockLogger: LoggericProtocol {
     }
 }
 
-/// Testing the `default` method
-@Test func testDefaultLog() async throws {
-    let mockLogger = MockLogger()
-    mockLogger.log(level: .default, message: "Default message", file: "TestFile.swift", function: "testFunction()", line: 60)
-    
-    #expect(mockLogger.capturedLogs.count == 1)
-    let capturedLog = mockLogger.capturedLogs.first
-    #expect(capturedLog?.level == .default)
-    #expect(capturedLog?.message == "Default message")
-    #expect(capturedLog?.file == "TestFile.swift")
-    #expect(capturedLog?.function == "testFunction()")
-    #expect(capturedLog?.line == 60)
-}
-
 /// Testing the `debug` method
 @Test func testDebugLog() async throws {
     let mockLogger = MockLogger()
@@ -55,6 +41,20 @@ public class MockLogger: LoggericProtocol {
     #expect(capturedLog?.file == "TestFile.swift")
     #expect(capturedLog?.function == "testFunction()")
     #expect(capturedLog?.line == 20)
+}
+
+/// Testing the `warning` method
+@Test func testDefaultLog() async throws {
+    let mockLogger = MockLogger()
+    mockLogger.log(level: .warning, message: "Default message", file: "TestFile.swift", function: "testFunction()", line: 60)
+    
+    #expect(mockLogger.capturedLogs.count == 1)
+    let capturedLog = mockLogger.capturedLogs.first
+    #expect(capturedLog?.level == .warning)
+    #expect(capturedLog?.message == "Default message")
+    #expect(capturedLog?.file == "TestFile.swift")
+    #expect(capturedLog?.function == "testFunction()")
+    #expect(capturedLog?.line == 60)
 }
 
 /// Testing the `error` method
