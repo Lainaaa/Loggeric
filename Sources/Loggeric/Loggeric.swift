@@ -1,29 +1,29 @@
 import os
 import Foundation
 
-/// Протокол для логгера
+/// Protocol for the logger
 public protocol LoggericProtocol {
-    /// Логирование сообщения
+    /// Logs a message
     /// - Parameters:
-    ///   - level: Уровень логирования.
-    ///   - message: Сообщение.
-    ///   - file: Имя файла (по умолчанию).
-    ///   - function: Имя функции (по умолчанию).
-    ///   - line: Номер строки (по умолчанию).
+    ///   - level: Log level.
+    ///   - message: Message to log.
+    ///   - file: File name (default).
+    ///   - function: Function name (default).
+    ///   - line: Line number (default).
     func log(level: LogLevel, message: String, file: String, function: String, line: Int)
 }
 
-/// Уровни логирования с поддержкой `os_log`
+/// Log levels with `os_log` support
 public enum LogLevel: String {
-    /// Default
+    /// Default log level
     case `default` = "default"
-    /// For debug purpose
+    /// Debug log level
     case debug = "debug"
-    /// For something where you should pay attention but is it now critical
+    /// Information log level
     case info = "info"
-    /// For errors
+    /// Error log level
     case error = "error"
-    /// For critical errors
+    /// Critical error log level
     case fault = "fault"
     
     var osLogType: OSLogType {
@@ -47,13 +47,14 @@ public enum LogLevel: String {
     }
 }
 
-/// Реализация логгера на основе os_log
+/// Implementation of the logger based on os_log
 public class Loggeric: LoggericProtocol {
     private let logger: OSLog
-    private let module: String
+    private let module: String?
     
-    public init(subsystem: String, module: String) {
-        self.logger = OSLog(subsystem: subsystem, category: module)
+    
+    public init(subsystem: String? = nil, module: String? = nil) {
+        self.logger = OSLog(subsystem: subsystem ?? "com.Loggeric" , category: module ?? "Logs")
         self.module = module
     }
     
@@ -66,6 +67,46 @@ public class Loggeric: LoggericProtocol {
         os_log("%@", log: logger, type: level.osLogType, formattedMessage as NSString)
     }
     
+    // Debug log level
+    public func `default`(_ message: String,
+                      file: String = #fileID,
+                      function: String = #function,
+                      line: Int = #line) {
+        log(level: .default, message: message, file: file, function: function, line: line)
+    }
+    
+    // Debug log level
+    public func debug(_ message: String,
+                      file: String = #fileID,
+                      function: String = #function,
+                      line: Int = #line) {
+        log(level: .debug, message: message, file: file, function: function, line: line)
+    }
+    
+    // Info log level
+    public func info(_ message: String,
+                     file: String = #fileID,
+                     function: String = #function,
+                     line: Int = #line) {
+        log(level: .info, message: message, file: file, function: function, line: line)
+    }
+    
+    // Error log level
+    public func error(_ message: String,
+                      file: String = #fileID,
+                      function: String = #function,
+                      line: Int = #line) {
+        log(level: .error, message: message, file: file, function: function, line: line)
+    }
+    
+    // Fault log level
+    public func fault(_ message: String,
+                      file: String = #fileID,
+                      function: String = #function,
+                      line: Int = #line) {
+        log(level: .fault, message: message, file: file, function: function, line: line)
+    }
+    
     private func formatMessage(level: LogLevel,
                                message: String,
                                file: String,
@@ -74,7 +115,8 @@ public class Loggeric: LoggericProtocol {
         let time = timestamp()
         let heart = level.heart
         let header = "\(heart)[\(level.rawValue.uppercased())] \(time)"
-        let location = "\(module) | \(file) | \(function) | line: \(line)"
+        let modulePart = module != nil ? "\(module!) | " : ""
+        let location = "\(modulePart)\(file) | \(function) | line: \(line)"
         return """
         \(header)
         \(location)
