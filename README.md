@@ -37,6 +37,19 @@ logger.info("Informational message")
 logger.error("An error occurred")
 logger.fault("Critical error")
 ```
+
+Logging Errors
+You can log errors directly using the error or fault methods:
+
+swift
+```
+do {
+    throw NSError(domain: "com.example.error", code: 404, userInfo: [NSLocalizedDescriptionKey: "Not Found"])
+} catch {
+    logger.error(error) // Log the error object
+}
+```
+
 Each log includes:
 
 * Log level with a corresponding emoji (e.g., 🖤 for debug)
