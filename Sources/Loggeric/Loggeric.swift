@@ -91,7 +91,7 @@ public class Loggeric: LoggericProtocol {
         log(level: .info, message: message, file: file, function: function, line: line)
     }
     
-    // Error log level
+    // Error log level with string object
     public func error(_ message: String,
                       file: String = #fileID,
                       function: String = #function,
@@ -99,12 +99,28 @@ public class Loggeric: LoggericProtocol {
         log(level: .error, message: message, file: file, function: function, line: line)
     }
     
-    // Fault log level
+    // Error log level with error object
+    public func error(_ message: Error,
+                      file: String = #fileID,
+                      function: String = #function,
+                      line: Int = #line) {
+        self.error("\(message)")
+    }
+    
+    // Fault log level with string object
     public func fault(_ message: String,
                       file: String = #fileID,
                       function: String = #function,
                       line: Int = #line) {
         log(level: .fault, message: message, file: file, function: function, line: line)
+    }
+    
+    // Fault log level with error object
+    public func fault(_ message: Error,
+                      file: String = #fileID,
+                      function: String = #function,
+                      line: Int = #line) {
+        self.fault("\(message)")
     }
     
     private func formatMessage(level: LogLevel,
