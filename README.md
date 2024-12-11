@@ -41,8 +41,8 @@ logger.fault("Critical error")
 Logging Errors
 You can log errors directly using the error or fault methods:
 
-swift
-```
+
+```swift
 do {
     throw NSError(domain: "com.example.error", code: 404, userInfo: [NSLocalizedDescriptionKey: "Not Found"])
 } catch {
